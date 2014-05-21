@@ -1,0 +1,18 @@
+<h1>Sign In</h1>
+
+<% if flash[:error] %>
+	<p><%= flash[:error] %></p>
+<% end %>
+<div class="section">
+	<%= form_tag(sessions_path, method: 'post') do |f| %>
+		  <%= label_tag(:email, "Email address:") %><br>
+		  <%= text_field_tag(:email) %><br>
+		  <%= label_tag(:password, "Password") %><br>
+		  <%= text_field_tag(:password) %><br>
+		  <%= submit_tag("Log in") %>
+	<% end %>
+</div>
+<div class="section">
+	<p>Don't have an account?</p>
+	<%= link_to 'Register here', new_user_path %>
+</div>

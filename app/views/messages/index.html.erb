@@ -1,0 +1,60 @@
+<div id="intro">
+	<% puts @success_message if @success_message %>
+	<h1>WELCOME TO THE RUBY WALL</h1>
+	<h3>Current user:  <%= "  " + @current_user.first_name %></h3>
+	<%= render "log_out" %>
+	<h3>Post a Message</h3>
+
+	<div id="intro_form">		
+		<%= form_for @message, url: {action: "create"}, :id=>"rails_form" do |f| %>
+			
+			<%= f.label :message, "Post a message:" %>
+			<%= f.text_area :message, :class=> "new_message" %><br/>
+			<br/>
+			<%= f.hidden_field :user_id, :value => @current_user.id %>
+			<%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
+			
+			<%= f.submit "Post your message" %>
+		<% end %>		
+	</div>
+</div>
+
+<% @messages.reverse.each {|message| %>
+<div class="message_intro">
+<%= message.created_at.strftime("On %B %d at %I:%M %p") + ", " + message.user.first_name + " " + message.user.last_name + " wrote: " %><br><br>
+</div>
+<div class="message">
+	<br>
+	
+	<%= message.message %><br><br>
+</div>
+<br>
+<br>
+	<% message.comments.each {|comment| %>
+	<%= comment.created_at.strftime("On %B %d at %I:%M %p") + ", " + comment.user.first_name + " " + comment.user.last_name + " commented: " %><br>
+	<div class="comment">
+	<br>                                    
+	<%= comment.comment %><br><br>
+	<br>
+</div> 
+
+	<% }%>
+
+<div class="new_comment">
+<%= form_for @comment, url: {controller: "comments", action: "create"} do |f| %>
+	
+	<%= f.label :comment, "Comment:" %>
+	<%= f.text_area :comment %>
+	<br/>
+	
+	<%= f.hidden_field :message_id, :value => message.id %>
+	<%= f.hidden_field :user_id, :value => @current_user.id %>
+	<%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>	
+	<%= f.submit "Add comment:" %><br>
+
+<% end %>
+
+</div><br><br>
+<br><br id="break">
+<% } %> 
+<br id="break"><br>
